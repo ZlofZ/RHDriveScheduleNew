@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import model.ScheduleItem;
 
-import java.io.File;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,19 +17,30 @@ public class IOController{
 	
 	
 	public static boolean save(List<ScheduleItem> list){
+		System.out.println("In Save, listSize: "+list.size()+"\n==================================");
 		ObjectMapper obMap = new ObjectMapper();
 		ArrayNode s = obMap.createArrayNode();
-		
+		System.out.println("adding");
 		for(ScheduleItem si : list){
+			System.out.println("looop");
 			s.addPOJO(si);
 		}
 		try{
+			File file = new File("Routes.json");
+			readFile(file);
 			obMap.writeValue(new File("Routes.json"), s);
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
 		return true;
+	}
+
+	private static void readFile(File f) throws IOException {
+		FileReader fr = new FileReader(f);
+		BufferedReader bt = new BufferedReader(fr);
+		String s = bt.readLine();
+		System.out.println(s);
 	}
 	
 	public static List<ScheduleItem> load(){
@@ -40,6 +51,7 @@ public class IOController{
 		ObjectNode an;
 		System.out.println("loaded file: "+readFile("Routes.json"));
 		try{
+
 			list = ob.readValue(readFile("Routes.json"), new TypeReference<List<ScheduleItem>>(){});
 			System.out.println(list.toString());
 			return list;
@@ -52,7 +64,7 @@ public class IOController{
 		String s="";
 		try{
 			byte[] encoded=Files.readAllBytes(Paths.get(path));
-			s =  new String(encoded, Charset.defaultCharset());
+			s =  new String(encoded, Charset.forName("utf-8"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
