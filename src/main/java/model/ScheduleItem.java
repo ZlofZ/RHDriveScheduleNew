@@ -5,7 +5,6 @@ import javafx.scene.control.Label;
 import java.util.Arrays;
 import java.util.Objects;
 
-
 public class ScheduleItem{
 	private String name;
 	private String day;
@@ -61,6 +60,7 @@ public class ScheduleItem{
 	public int getVehileNr(){
 		return vehileNr;
 	}
+	
 	
 	@Override
 	public String toString(){

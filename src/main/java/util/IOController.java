@@ -27,20 +27,13 @@ public class IOController{
 		}
 		try{
 			File file = new File("Routes.json");
-			readFile(file);
-			obMap.writeValue(new File("Routes.json"), s);
+			//readFile(file);
+			obMap.writeValue(file, s);
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
 		return true;
-	}
-
-	private static void readFile(File f) throws IOException {
-		FileReader fr = new FileReader(f);
-		BufferedReader bt = new BufferedReader(fr);
-		String s = bt.readLine();
-		System.out.println(s);
 	}
 	
 	public static List<ScheduleItem> load(){
@@ -51,7 +44,6 @@ public class IOController{
 		ObjectNode an;
 		System.out.println("loaded file: "+readFile("Routes.json"));
 		try{
-
 			list = ob.readValue(readFile("Routes.json"), new TypeReference<List<ScheduleItem>>(){});
 			System.out.println(list.toString());
 			return list;
@@ -60,6 +52,14 @@ public class IOController{
 		}
 		return null;
 	}
+
+	private static void readFromFile(File f) throws IOException {
+		FileReader fr = new FileReader(f);
+		BufferedReader bt = new BufferedReader(fr);
+		String s = bt.readLine();
+		System.out.println(s);
+	}
+	
 	static String readFile(String path){
 		String s="";
 		try{

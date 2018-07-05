@@ -59,6 +59,8 @@ public class SearchViewController{
 	
 	private ArrayList<ScheduleItem> listOfRoutes;
 	
+	//FXML Methods.........................................
+	
 	@FXML
 	private void initialize(){
 		listOfRoutes=new ArrayList<>();
@@ -67,65 +69,8 @@ public class SearchViewController{
 		
 	}
 	
-	private void populateWeekBox(){
-		weekBox.getItems().addAll("Jämn Vecka","Ojämn Vecka","Båda Veckor","Jämn/Båda Sommar","Ojämn/Båda Sommar");
-	}
+	//Top bar FXML Methods
 	
-	private void populateDayBox(){
-		dayBox.getItems().add("Måndag");
-		dayBox.getItems().add("Tisdag");
-		dayBox.getItems().add("Onsdag");
-		dayBox.getItems().add("Torsdag");
-		dayBox.getItems().add("Fredag");
-	}
-	private void routeListRefresh(){
-		System.out.println("inListRefresh "+listOfRoutes.toString());
-		listClear();
-		if(routeSearchBox.getText().isEmpty()){
-			listClear();
-			for(int i=0; i<listOfRoutes.size(); i++){
-				listSwitch(i);
-			}
-		}else
-			for(int i = 0; i < listOfRoutes.size(); i++){
-				if(msgSplitAndSearch(i)){
-					listSwitch(i);
-				}
-			}
-	}
-	
-	private void listClear(){
-		routeListMonday.getItems().clear();
-		routeListTuesday.getItems().clear();
-		routeListWednesday.getItems().clear();
-		routeListThursday.getItems().clear();
-		routeListFriday.getItems().clear();
-	}
-	private void printList(){
-		System.out.println("PrintList");
-		for (ScheduleItem s:listOfRoutes) {
-			System.out.println(s);
-		}
-	}
-
-	private void listSwitch(int i){
-		printList();
-		switch(listOfRoutes.get(i).getDay()){
-			case "Måndag":routeListMonday.getItems().add(listOfRoutes.get(i));
-				break;
-			case "Tisdag":routeListTuesday.getItems().add(listOfRoutes.get(i));
-				break;
-			case "Onsdag":routeListWednesday.getItems().add(listOfRoutes.get(i));
-				break;
-			case "Torsdag":routeListThursday.getItems().add(listOfRoutes.get(i));
-				break;
-			case "Fredag":routeListFriday.getItems().add(listOfRoutes.get(i));
-				break;
-			default:
-				routeListMonday.getItems().add(listOfRoutes.get(i));
-				break;
-		}
-	}
 	@FXML
 	private void menubarPaneFadein(MouseEvent mouseEvent){
 		((Pane) mouseEvent.getTarget()).setStyle("-fx-background-color:darkgrey");
@@ -134,32 +79,6 @@ public class SearchViewController{
 	@FXML
 	private void menubarPaneFadeout(MouseEvent mouseEvent){
 		((Pane) mouseEvent.getTarget()).setStyle("-fx-background-color:grey");
-	}
-	
-	@FXML
-	private void updateRouteList(KeyEvent k){
-		routeListRefresh();
-	}
-	
-	private boolean msgSplitAndSearch(int i) {
-		String[] words = routeSearchBox.getText().split(" ");
-		int matches = 0;
-		for(String s: words){
-			if(listOfRoutes.get(i).toString().toLowerCase().contains(s.toLowerCase()))
-				matches++;
-		}
-		
-		
-		
-		return (words.length==matches);
-	}
-	
-	private Alert makeAlert(){
-		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle("Lägg till tur");
-		alert.setHeaderText("Konfirmera val");
-		alert.show();
-		return alert;
 	}
 	
 	@FXML
@@ -172,30 +91,41 @@ public class SearchViewController{
 		((Label)((Pane) mouseEvent.getTarget()).getChildren().get(0)).textFillProperty().setValue(Color.WHITE);
 	}
 	
+	//Searchbar Activation method
+	
+	@FXML
+	private void updateRouteList(KeyEvent k){
+		refreshDisplayedRoutes();
+	}
+	
+	//Add and Remove Button Methods
+	
 	@FXML
 	private void addRoute(MouseEvent mouseEvent){
 		addRouteHBox.setVisible(true);
 	}
 	
 	@FXML
-	private void editRoute(MouseEvent mouseEvent){
+	private void removeRoute(MouseEvent mouseEvent){
 		ArrayList<ScheduleItem> rmList = new ArrayList<>();
 		listOfRoutes.removeAll(routeListMonday.getSelectionModel().getSelectedItems());
 		listOfRoutes.removeAll(routeListTuesday.getSelectionModel().getSelectedItems());
 		listOfRoutes.removeAll(routeListWednesday.getSelectionModel().getSelectedItems());
 		listOfRoutes.removeAll(routeListThursday.getSelectionModel().getSelectedItems());
 		listOfRoutes.removeAll(routeListFriday.getSelectionModel().getSelectedItems());
-		routeListRefresh();
+		refreshDisplayedRoutes();
 	}
+	
+	//Add Route OK button
 	
 	@FXML
 	private void addeditButtonClicked(ActionEvent actionEvent){
 		//Alert a = makeAlert();
 		ScheduleItem si = new ScheduleItem(routeNameInput.getText(), dayBox.getValue().toString(), fractionsInput.getText().split(","),
 		                                   Integer.parseInt(routeNrInput.getText()), inputAreas.getText().split(","), inputMunicipality.getText().split(","), weekBox.getValue().toString(), Integer.parseInt(vehicleNrInput.getText()));
-		System.out.println(si.toString()+", is the item null? "+(si!=null));
+		System.out.println("is the item null? "+(si==null));
 		listOfRoutes.add(si);
-		routeListRefresh();
+		refreshDisplayedRoutes();
 		routeNameInput.clear();
 		fractionsInput.clear();
 		inputAreas.clear();
@@ -209,6 +139,8 @@ public class SearchViewController{
 		}
 	}
 	
+	//Save And Load
+	
 	@FXML
 	private void saveToFile(MouseEvent mouseEvent){
 		IOController.save(listOfRoutes);
@@ -219,6 +151,72 @@ public class SearchViewController{
 		//listOfRoutes = (ArrayList<ScheduleItem>) IOController.loadFromFile();
 		listOfRoutes.clear();
 		listOfRoutes = (ArrayList<ScheduleItem>) IOController.load();
-		routeListRefresh();
+		refreshDisplayedRoutes();
+	}
+	
+	//Helper Methods...............................................
+	
+	private void populateWeekBox(){
+		weekBox.getItems().addAll("Jämn Vecka","Ojämn Vecka","Båda Veckor","Jämn/Båda Sommar","Ojämn/Båda Sommar");
+	}
+	
+	private void populateDayBox(){
+		dayBox.getItems().add("Måndag");
+		dayBox.getItems().add("Tisdag");
+		dayBox.getItems().add("Onsdag");
+		dayBox.getItems().add("Torsdag");
+		dayBox.getItems().add("Fredag");
+	}
+	
+	private void refreshDisplayedRoutes(){
+		System.out.println("inListRefresh");
+		clearListViews();
+		if(routeSearchBox.getText().isEmpty())
+			addAllRoutesToDisplayElements();
+		else
+			for(ScheduleItem item:listOfRoutes)
+				for(String s : routeSearchBox.getText().split(" "))
+					if(item.toString().matches(s))
+						addRouteToDisplayElement(item);
+	}
+	
+	private void clearListViews(){
+		routeListMonday.getItems().clear();
+		routeListTuesday.getItems().clear();
+		routeListWednesday.getItems().clear();
+		routeListThursday.getItems().clear();
+		routeListFriday.getItems().clear();
+	}
+	
+	private void printListOfRoutes(){
+		System.out.println("PrintList");
+		for (ScheduleItem s:listOfRoutes) {
+			System.out.println(s);
+		}
+	}
+	
+	private void addAllRoutesToDisplayElements(){
+		clearListViews();
+		for(ScheduleItem item : listOfRoutes)
+			addRouteToDisplayElement(item);
+	}
+	
+	private void addRouteToDisplayElement(ScheduleItem item){
+		printListOfRoutes();
+		switch(item.getDay()){
+			case "Måndag":routeListMonday.getItems().add(item);
+				break;
+			case "Tisdag":routeListTuesday.getItems().add(item);
+				break;
+			case "Onsdag":routeListWednesday.getItems().add(item);
+				break;
+			case "Torsdag":routeListThursday.getItems().add(item);
+				break;
+			case "Fredag":routeListFriday.getItems().add(item);
+				break;
+			default:
+				routeListMonday.getItems().add(item);
+				break;
+		}
 	}
 }
