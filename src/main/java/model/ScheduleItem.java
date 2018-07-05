@@ -1,5 +1,7 @@
 package model;
 
+import javafx.scene.control.Label;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -62,22 +64,45 @@ public class ScheduleItem{
 	
 	@Override
 	public String toString(){
-		String mat="",are="",mun="";
-		
-		for(int i=0; i<getAreas().length; i++){
-			if(i<getAreas().length-1)are+=areas[i]+",";
-			else are+=areas[i];
-		}
+		System.out.println("in Scheduleitem tostring");
+		StringBuilder sb = new StringBuilder();
+		sb.append(day);
+		sb.append(" | ");
+		sb.append(name);
+		sb.append(" | ");
+		sb.append(routeNumber);
+		sb.append(" | ");
+		sb.append(vehileNr);
+		sb.append(" | ");
+		sb.append(evenWeek);
+		sb.append(" | ");
+		System.out.print("FractionLoop");
 		for(int i=0; i<getMaterials().length; i++){
-			if(i<getMaterials().length-1)mat+=materials[i]+",";
-			else mat+=materials[i];
+			System.out.print("=");
+			sb.append(materials[i]);
+			if(i<getMaterials().length-1)sb.append(",");
 		}
+		System.out.println();
+		sb.append(" | ");
+		System.out.print("municipalityLoop");
 		for(int i=0; i<getMunicipalities().length; i++){
-			if(i<getMunicipalities().length-1)mun+=municipalities[i]+",";
-			else mun+=municipalities[i];
+			System.out.print("=");
+			sb.append(municipalities[i]);
+			if(i<getMunicipalities().length-1)sb.append(",");
 		}
-		
-		return name+" | "+day+" | "+mat+" | "+routeNumber+" | "+are+" | "+mun+" | "+evenWeek+" | "+vehileNr;
+		System.out.println();
+		sb.append(" | ");
+		System.out.print("areaLoop");
+		for(int i=0; i<getAreas().length; i++){
+			System.out.print("=");
+			sb.append(areas[i]);
+			if(i<getAreas().length-1)sb.append(",");
+		}
+		System.out.println();
+
+
+		System.out.println("returntostringscheduleitem");
+		return sb.toString();
 	}
 	
 	@Override

@@ -101,7 +101,15 @@ public class SearchViewController{
 		routeListThursday.getItems().clear();
 		routeListFriday.getItems().clear();
 	}
+	private void printList(){
+		System.out.println("PrintList");
+		for (ScheduleItem s:listOfRoutes) {
+			System.out.println(s);
+		}
+	}
+
 	private void listSwitch(int i){
+		printList();
 		switch(listOfRoutes.get(i).getDay()){
 			case "Måndag":routeListMonday.getItems().add(listOfRoutes.get(i));
 				break;
@@ -185,7 +193,7 @@ public class SearchViewController{
 		//Alert a = makeAlert();
 		ScheduleItem si = new ScheduleItem(routeNameInput.getText(), dayBox.getValue().toString(), fractionsInput.getText().split(","),
 		                                   Integer.parseInt(routeNrInput.getText()), inputAreas.getText().split(","), inputMunicipality.getText().split(","), weekBox.getValue().toString(), Integer.parseInt(vehicleNrInput.getText()));
-		System.out.println(si.toString()+(si==null));
+		System.out.println(si.toString()+", is the item null? "+(si!=null));
 		listOfRoutes.add(si);
 		routeListRefresh();
 		routeNameInput.clear();
@@ -195,7 +203,7 @@ public class SearchViewController{
 		vehicleNrInput.clear();
 		routeNrInput.clear();
 		addRouteHBox.setVisible(false);
-		System.out.println("things:\n"+si.getMaterials().length+"\n"+si.getAreas()+"\n"+si.getMunicipalities()+"\n \n"+si.getMaterials().toString()+"\n"+si.getAreas().toString()+"\n"+si.getMunicipalities().toString());
+		//System.out.println("things:\n"+si.getMaterials().length+"\n"+si.getAreas()+"\n"+si.getMunicipalities()+"\n \n"+si.getMaterials().toString()+"\n"+si.getAreas().toString()+"\n"+si.getMunicipalities().toString());
 		for(int i=0; i<si.getAreas().length; i++){
 			System.out.println(si.getAreas()[i]);
 		}
