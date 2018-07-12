@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import model.ScheduleItem;
 import util.IOController;
 
@@ -58,14 +59,26 @@ public class SearchViewController{
 	private ListView routeListFriday;
 	
 	private ArrayList<ScheduleItem> listOfRoutes;
-	
+
+	private Stage primaryStage;
+
+
+	public void setStage(Stage s){
+		this.primaryStage=s;
+	}
+
+	public SearchViewController(Stage ps){
+		this.primaryStage=ps;
+	}
+
 	//FXML Methods.........................................
-	
+
 	@FXML
 	private void initialize(){
 		listOfRoutes=new ArrayList<>();
 		populateDayBox();
 		populateWeekBox();
+		populateListofRoutes();
 		
 	}
 	
@@ -123,7 +136,7 @@ public class SearchViewController{
 		//Alert a = makeAlert();
 		ScheduleItem si = new ScheduleItem(routeNameInput.getText(), dayBox.getValue().toString(), fractionsInput.getText().split(","),
 		                                   Integer.parseInt(routeNrInput.getText()), inputAreas.getText().split(","), inputMunicipality.getText().split(","), weekBox.getValue().toString(), Integer.parseInt(vehicleNrInput.getText()));
-		System.out.println("is the item null? "+(si==null));
+		//System.out.println("is the item null? "+(si==null));
 		listOfRoutes.add(si);
 		refreshDisplayedRoutes();
 		routeNameInput.clear();
@@ -133,9 +146,9 @@ public class SearchViewController{
 		vehicleNrInput.clear();
 		routeNrInput.clear();
 		addRouteHBox.setVisible(false);
-		//System.out.println("things:\n"+si.getMaterials().length+"\n"+si.getAreas()+"\n"+si.getMunicipalities()+"\n \n"+si.getMaterials().toString()+"\n"+si.getAreas().toString()+"\n"+si.getMunicipalities().toString());
+		////System.out.println("things:\n"+si.getMaterials().length+"\n"+si.getAreas()+"\n"+si.getMunicipalities()+"\n \n"+si.getMaterials().toString()+"\n"+si.getAreas().toString()+"\n"+si.getMunicipalities().toString());
 		for(int i=0; i<si.getAreas().length; i++){
-			System.out.println(si.getAreas()[i]);
+			//System.out.println(si.getAreas()[i]);
 		}
 	}
 	
@@ -143,7 +156,7 @@ public class SearchViewController{
 	
 	@FXML
 	private void saveToFile(MouseEvent mouseEvent){
-		IOController.save(listOfRoutes);
+		IOController.save(listOfRoutes, primaryStage);
 	}
 	
 	@FXML
@@ -155,7 +168,12 @@ public class SearchViewController{
 	}
 	
 	//Helper Methods...............................................
-	
+
+	private void populateListofRoutes(){
+		listOfRoutes = (ArrayList<ScheduleItem>) IOController.makeListFromString();
+		refreshDisplayedRoutes();
+	}
+
 	private void populateWeekBox(){
 		weekBox.getItems().addAll("Jämn Vecka","Ojämn Vecka","Båda Veckor","Jämn/Båda Sommar","Ojämn/Båda Sommar");
 	}
@@ -168,18 +186,40 @@ public class SearchViewController{
 		dayBox.getItems().add("Fredag");
 	}
 	
-	private void refreshDisplayedRoutes(){
-		System.out.println("inListRefresh");
+	private void refreshDisplayedRoutes() {
+		//System.out.println("inListRefresh");
 		clearListViews();
-		if(routeSearchBox.getText().isEmpty())
+		if (routeSearchBox.getText().isEmpty())
 			addAllRoutesToDisplayElements();
 		else
-			for(ScheduleItem item:listOfRoutes)
-				for(String s : routeSearchBox.getText().split(" "))
-					if(item.toString().matches(s))
-						addRouteToDisplayElement(item);
+			for (ScheduleItem item : listOfRoutes) {
+				int nrOfMatches=0;
+				for (String s : routeSearchBox.getText().split(" ")) {
+					//System.out.println(IOController.toUTF(item.toString().toLowerCase())+"\n"+s.toLowerCase()+"\n matching: "+();
+					if(compareStrings(s, item))
+						nrOfMatches++;
+
+
+
+
+
+
+					/*
+					if(compareStrings(s, item)){
+						System.out.println(item.toString());
+						addRouteToDisplayElement(item);*/
+				}
+				if (nrOfMatches==routeSearchBox.getText().split(" ").length)
+					addRouteToDisplayElement(item);
+			}
 	}
-	
+	private Boolean compareStrings(String word, ScheduleItem item){
+		String itemString = item.toString().toLowerCase();
+
+		boolean b = itemString.contains(word.toLowerCase());
+		//System.out.println("Does the word: '"+word+"' have any matches in: "+itemString+"\n"+b+itemString.contains(word.toLowerCase()));
+		return b;
+	}
 	private void clearListViews(){
 		routeListMonday.getItems().clear();
 		routeListTuesday.getItems().clear();
@@ -189,9 +229,9 @@ public class SearchViewController{
 	}
 	
 	private void printListOfRoutes(){
-		System.out.println("PrintList");
+		//System.out.println("PrintList");
 		for (ScheduleItem s:listOfRoutes) {
-			System.out.println(s);
+			//System.out.println(s);
 		}
 	}
 	
@@ -219,4 +259,6 @@ public class SearchViewController{
 				break;
 		}
 	}
+
+
 }

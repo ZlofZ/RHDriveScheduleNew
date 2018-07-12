@@ -64,7 +64,7 @@ public class ScheduleItem{
 	
 	@Override
 	public String toString(){
-		System.out.println("in Scheduleitem tostring");
+		//System.out.println("in Scheduleitem tostring");
 		StringBuilder sb = new StringBuilder();
 		sb.append(day);
 		sb.append(" | ");
@@ -76,32 +76,32 @@ public class ScheduleItem{
 		sb.append(" | ");
 		sb.append(evenWeek);
 		sb.append(" | ");
-		System.out.print("FractionLoop");
+		//System.out.print("FractionLoop");
 		for(int i=0; i<getMaterials().length; i++){
-			System.out.print("=");
+			//System.out.print("=");
 			sb.append(materials[i]);
 			if(i<getMaterials().length-1)sb.append(",");
 		}
-		System.out.println();
+		//System.out.println();
 		sb.append(" | ");
-		System.out.print("municipalityLoop");
+		//System.out.print("municipalityLoop");
 		for(int i=0; i<getMunicipalities().length; i++){
-			System.out.print("=");
+			//System.out.print("=");
 			sb.append(municipalities[i]);
 			if(i<getMunicipalities().length-1)sb.append(",");
 		}
-		System.out.println();
+		//System.out.println();
 		sb.append(" | ");
-		System.out.print("areaLoop");
+		//System.out.print("areaLoop");
 		for(int i=0; i<getAreas().length; i++){
-			System.out.print("=");
+			//System.out.print("=");
 			sb.append(areas[i]);
 			if(i<getAreas().length-1)sb.append(",");
 		}
-		System.out.println();
+		//System.out.println();
 
 
-		System.out.println("returntostringscheduleitem");
+		//System.out.println("returntostringscheduleitem");
 		return sb.toString();
 	}
 	

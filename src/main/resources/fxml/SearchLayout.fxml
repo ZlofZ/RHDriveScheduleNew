@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="1080.0" maxWidth="1920.0" minHeight="400.0" minWidth="600.0" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SearchViewController">
+<VBox maxHeight="1080.0" maxWidth="1920.0" minHeight="400.0" minWidth="600.0" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox prefHeight="35.0" prefWidth="200.0">
+      <HBox prefHeight="35.0" prefWidth="200.0" visible="false">
          <children>
             <Pane fx:id="searchPagePane" onMouseEntered="#menubarPaneFadein" onMouseExited="#menubarPaneFadeout" onMousePressed="#menuBarPaneMPress" onMouseReleased="#menuBarPaneMRelease" prefHeight="35.0" style="-fx-background-color: grey;" HBox.hgrow="ALWAYS">
                <children>
@@ -170,7 +170,7 @@
          </font>
       </Label>
       <ListView fx:id="routeListFriday" minHeight="100.0" prefHeight="200.0" />
-      <HBox prefHeight="35.0" prefWidth="200.0">
+      <HBox prefHeight="35.0" prefWidth="200.0" visible="false">
          <children>
             <Pane fx:id="addRouteButton" onMouseClicked="#addRoute" style="-fx-background-color: grey;">
                <children>
@@ -204,7 +204,7 @@
             </Pane>
          </children>
       </HBox>
-      <HBox fx:id="addRouteHBox" prefHeight="100.0" prefWidth="200.0">
+      <HBox fx:id="addRouteHBox" prefHeight="100.0" prefWidth="200.0" visible="false">
          <children>
             <ChoiceBox fx:id="dayBox" prefWidth="150.0">
                <HBox.margin>
